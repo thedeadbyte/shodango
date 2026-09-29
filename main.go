@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io"
@@ -15,11 +16,10 @@ import (
 )
 
 type ShodanResponse struct {
-	IP        string
-	Ports     []int
-	Vulns     []string
-	RawOutput string
-	Err       error
+	IP         string `json:"ip_str"`
+	Ports      []int  `json:"ports"`
+	LastUpdate string `json:"last_update"`
+	Err        error
 }
 
 // Pull project envs
@@ -62,7 +62,15 @@ func worker(jobs <-chan string, results chan<- ShodanResponse, wg *sync.WaitGrou
 			log.Println(err)
 			continue
 		}
-		results <- ShodanResponse{IP: j, RawOutput: string(sBody)}
+
+		var sr ShodanResponse
+		err = json.Unmarshal(sBody, &sr)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+
+		results <- sr
 	}
 }
 
@@ -115,6 +123,9 @@ func main() {
 
 	// Collection, ranges over output, prints to stdout and json if specified
 	for r := range results {
-		fmt.Println(r.RawOutput)
+		fmt.Printf("IP: %v\n", r.IP)
+		fmt.Printf("Ports: %v\n", r.Ports)
+		fmt.Printf("LastUpdate: %v\n", r.LastUpdate)
+
 	}
 }
