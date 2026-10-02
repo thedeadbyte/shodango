@@ -124,6 +124,7 @@ func main() {
 	// Collection, ranges over output, prints to stdout and json if specified
 	for r := range results {
 		fmt.Printf("IP: %v\n", r.IP)
+		fmt.Println("---------------")
 		fmt.Printf("Ports: %v\n", r.Ports)
 		fmt.Printf("LastUpdate: %v\n", r.LastUpdate)
 
