@@ -127,6 +127,6 @@ func main() {
 		fmt.Println("---------------")
 		fmt.Printf("Ports: %v\n", r.Ports)
 		fmt.Printf("LastUpdate: %v\n", r.LastUpdate)
-
+		fmt.Println("---------------")
 	}
 }
